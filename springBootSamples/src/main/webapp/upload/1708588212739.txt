@@ -1,0 +1,5 @@
+<%
+	List<SeatDto> list = (List<SeatDto>)request.getAttribute("list");
+%>
+
+면접의완성1757

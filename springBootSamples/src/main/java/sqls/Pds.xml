@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="ssg.com.a.dao.PdsDao">
+
+<select id="pdslist" parameterType="ssg.com.a.dto.PdsParam"
+				resultType="ssg.com.a.dto.PdsDto">
+	select seq, id, title, content, filename, newfilename, readcount, downcount, regedate
+	from pds
+	<if test="choice != null and choice != '' and search != null and search != ''">
+		<if test="choice == 'title'">
+			where title like concat('%', #{search}, '%')
+		</if>
+		<if test="choice == 'content'">
+			where content like concat('%', #{search}, '%')
+		</if>
+		<if test="choice == 'writer'">
+			where id=#{search}
+		</if>
+	</if>
+	order by seq desc
+	limit ${(pageNumber * 10)}, 10;
+</select>
+
+<!-- 글의 총수 -->
+<select id="getallpds" parameterType="ssg.com.a.dto.PdsParam"
+				resultType="java.lang.Integer">
+	select count(*) 
+	from pds
+	<if test="choice != null and choice != '' and search != null and search != '' ">
+		<if test="choice == 'title'">
+			where title like concat('%', #{search}, '%')
+		</if>
+		<if test="choice == 'content'">
+			where content like concat('%', #{search}, '%')
+		</if>
+		<if test="choice == 'writer'">
+			where id=#{search}
+		</if>	
+	</if>
+</select>
+
+<insert id="pdsupload" parameterType="ssg.com.a.dto.PdsDto">
+	insert into pds(id, title, content, filename, newfilename,
+		readcount, downcount, regedate)
+	values(#{id}, #{title}, #{content}, #{filename}, #{newfilename},
+			0, 0, now())
+</insert>
+
+<select id="getPds" parameterType="Integer" resultType="ssg.com.a.dto.PdsDto">
+	select seq, id, title, content, filename, newfilename,
+		readcount, downcount, regedate
+	from pds
+	where seq=#{seq}
+</select>
+
+<update id="downcount" parameterType="Integer">
+	update pds
+	set downcount=downcount+1
+	where seq=#{seq}
+</update>
+
+<update id="readcount" parameterType="Integer">
+	update pds 
+	set readcount=readcount+1 
+	where seq=#{seq} 
+</update>
+
+<select id="pdsdetail" parameterType="java.lang.Integer" resultType="ssg.com.a.dto.PdsDto">
+	select seq, id, title, content, filename, newfilename, readcount, downcount, regedate
+	from pds
+	where seq=#{seq}
+</select>
+
+
+
+</mapper>	

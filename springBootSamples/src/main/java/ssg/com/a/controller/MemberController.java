@@ -33,22 +33,10 @@ public class MemberController {
 	}
 	
 	@PostMapping("login")
-	public String login(MemberDto dto, HttpServletRequest request) {
+	public MemberDto login(MemberDto mem) {
 		System.out.println("MemberController login " + new Date());
 		
-		MemberDto user = service.login(dto);
-		
-		if(user != null) {
-			request.getSession().invalidate(); //Session 삭제
-			System.out.println("세션이 삭제됨:" + new Date());
-	        
-			request.getSession().setAttribute("login", user);
-			System.out.println("세션이 생성됨:" + new Date());
-			request.getSession().setMaxInactiveInterval(60*60*24);
-			return "로그인에 성공하였습니다!";
-		}else {
-			return "로그인에 실패하였습니다!";
-		}
+		return service.login(mem);
 	}
 	
 	@PostMapping("regi")
